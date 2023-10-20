@@ -17,5 +17,7 @@ namespace ChessApi.Models
         [JsonIgnore]
 
         public User? BlackUser { get; set; }
+        
+        public ICollection<Move> Moves { get; set; } // Collection of moves made in this game
     }
 };

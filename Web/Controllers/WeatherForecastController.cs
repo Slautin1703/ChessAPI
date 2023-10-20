@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChessApi.Controllers;
-
 public class WeatherForecastData
 {
     private static readonly string[] Summaries = new[]

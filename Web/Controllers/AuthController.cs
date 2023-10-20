@@ -28,9 +28,9 @@ namespace ChessApi.Controllers
             IConfigurationSection section = _config.GetSection("JWT");
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(section.GetValue<string>("Token")));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            string issuer = section.GetValue<string>("Issuer");
-            string audience = section.GetValue<string>("Audience");
-            int expirationHours = section.GetValue<int>("ExpirationHours");
+            var issuer = section.GetValue<string>("Issuer");
+            var audience = section.GetValue<string>("Audience");
+            var expirationHours = section.GetValue<int>("ExpirationHours");
         
             var token = new JwtSecurityToken(issuer,
                 audience, 

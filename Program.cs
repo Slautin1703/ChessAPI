@@ -1,9 +1,12 @@
+using System.Security.Claims;
 using System.Text;
+using ChessApi.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ChessApi.GameInterfaces;
+using ChessApi.MoveInterfaces;
 using ChessApi.Services;
 using DbContext = ChessApi.Data.DbContext;
 using Newtonsoft.Json;
@@ -13,11 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 
+builder.Services.AddScoped<IMoveService, MoveService>();
+builder.Services.AddScoped<IMoveRepository, MoveRepository>();
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme =
-            JwtBearerDefaults.AuthenticationScheme; //if you dont use Jwt i think you can just delete this line
+            JwtBearerDefaults.AuthenticationScheme;
     })
     .AddCookie(options =>
     {
@@ -35,8 +41,9 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = builder.Configuration["JWT:Audience"],
             ValidIssuer = builder.Configuration["JWT:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JWT:TOken"])
-            )
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:Token"])
+            ),
+            NameClaimType = ClaimTypes.NameIdentifier
         };
     });
 
@@ -93,10 +100,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-
-// var user = new User("German");
-// Console.WriteLine(user);
 
 app.UseHttpsRedirection();
 
